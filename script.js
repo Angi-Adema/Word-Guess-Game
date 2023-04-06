@@ -30,35 +30,64 @@ var words = [
 // The init function is called when the page loads
 function init() {
   // fire the getWins and getlosses functions here
+  getWins();
+  getLosses();
 }
 
 // The startGame function is called when the start button is clicked
 function startGame() {
   // update the timerCount variable to how long you want the user to play the round for
+  timerCount = 30;
   // fire the renderBlanks function so we can see the blanks of the chosen word from the words array
+  renderBlanks();
   // fire the startTimer function to start the round
+  startTimer();
 }
 
 // The winGame function is called when the win condition is met
 function winGame() {
   // this function lets the user know that you won that round by updating the DOM
   // update the winCounter by one
+  if (isWin === true) {
+    winCounter++;
+  }
   // fire the setWins function
+  setWins();
 }
 
 // The loseGame function is called when timer reaches 0
 function loseGame() {
   // this function lets the user know that you lost that round by updating the DOM
   // update the loseCounter by one
+  if (isWin === false) {
+    loseCounter++;
+  }
   // fire the setLosses function
+  setLosses();
 }
 
 // The setTimer function starts and stops the timer and triggers winGame() and loseGame()
 function startTimer() {
   // create an interval that counts down a timerCount variable and updates the timerElement to show the time decrementing
-  // create a conditional here that checks you have any time left and if so check to see if isWin condition is met and you still have time left
-  // if that condition is true then clear the interval and fire the winGame function
-  // However, if the timerCount is equal to 0 then clear the interval and fire the loseGame function
+  var timeInterval = setInterval(function () {
+    if (timerCount === 30) {
+      timerElement.textContent = timerCount + " seconds remaining!";
+      timerCount--;
+      // create a conditional here that checks you have any time left and if so check to see if isWin condition is met and you still have time left
+    } else if (timerCount === 1 && isWin === true) {
+      // if that condition is true then clear the interval and fire the winGame function
+      timerElement.textContent = "";
+      clearInterval(timeInterval);
+      winGame();
+      // However, if the timerCount is equal to 0 then clear the interval and fire the loseGame function
+    } else {
+      if (timerCount === 0) {
+        timerElement.textContent = "";
+        clearInterval(timeInterval);
+        loseGame();
+      }
+    }
+  });
 }
 
 // Creates blanks on screen
@@ -80,27 +109,45 @@ function renderBlanks() {
 // Updates win count on screen and sets win count to client storage
 function setWins() {
   // update the win textContent with the winCounter
+  win.textContent = winCounter;
   // update the localStorage to track the "winCount"
+  localStorage.setItem("winCount", JSON.stringify(winCounter));
 }
 
 // Updates lose count on screen and sets lose count to client storage
 function setLosses() {
   // update the lose textContent with the loseCounter
+  lose.textContent = loseCounter;
   // update the localStorage to track the "loseCount"
+  localStorage.setItem("loseCount", JSON.stringify(loseCounter));
 }
 
 // These functions are used by init
 function getWins() {
   // get the winCount from localStorage
+  var winTotal = JSON.parse(localStorage.getItem("winCount"));
   // check to see if it has a value and if it doesn't update the winCounter to zero
-  // else set the winCounter variable to equal the value from localStorage
+  if (winTotal < 1) {
+    winCounter === 0;
+    // else set the winCounter variable to equal the value from localStorage
+  } else {
+    winCounter === winTotal;
+  }
   // render the win count to the page
+  win.textContent = winTotal;
 }
-function getlosses() {
+function getLosses() {
   // get the loseCount from localStorage
+  var loseTotal = JSON.parse(localStorage.getItem("loseCount"));
   // check to see if it has a value and if it doesn't update the loseCounter to zero
-  // else set the loseCounter variable to equal the value from localStorage
+  if (loseCounter < 1) {
+    loseCounter === 0;
+    // else set the loseCounter variable to equal the value from localStorage
+  } else {
+    loseCounter === loseTotal;
+  }
   // render the lose count to the page
+  win.textContent = loseTotal;
 }
 
 function checkWin() {
