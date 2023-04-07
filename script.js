@@ -38,7 +38,7 @@ function init() {
 function startGame() {
   isWin = false;
   // update the timerCount variable to how long you want the user to play the round for
-  timerCount = 15;
+  timerCount = 20;
   // Prevents start buttom from being clicked when round is in progress
   startButton.disabled = true;
   // fire the renderBlanks function so we can see the blanks of the chosen word from the words array
@@ -79,10 +79,11 @@ function startTimer() {
     timerElement.textContent = timerCount;
     // create a conditional here that checks you have any time left and if so check to see if isWin condition is met and you still have time left
     if (timerCount >= 0) {
-    } else if (isWin && timerCount > 0) {
-      // if that condition is true then clear the interval and fire the winGame function
-      clearInterval(timeInterval);
-      winGame();
+      if (isWin && timerCount > 0) {
+        // if that condition is true then clear the interval and fire the winGame function
+        clearInterval(timeInterval);
+        winGame();
+      }
     }
     // However, if the timerCount is equal to 0 then clear the interval and fire the loseGame function
     if (timerCount === 0) {
@@ -166,7 +167,7 @@ function checkLetters(letter) {
   // you need two for loops here.  One to check to see if the letter is in the word
   for (var i = 0; i < numBlanks; i++) {
     if (chosenWord[i] === letter) {
-      guessedLetter === true;
+      guessedLetter = true;
     }
   }
   // and another to update the blankLetters array with the letter in place of the underscore
@@ -211,11 +212,11 @@ var resetButton = document.querySelector(".reset-button");
 
 // BONUS: Resets wins and loses counter variables to zero and renders win loss counts via those two functions
 function resetGame() {
-    winCounter = 0;
-    loseCounter = 0;
-    setWins();
-    setLosses();
+  winCounter = 0;
+  loseCounter = 0;
+  setWins();
+  setLosses();
 }
 
 // BONUS: Attach event listener to the reset button and fire the resetGame function
-resetButton.addEventListener('click', resetGame);
+resetButton.addEventListener("click", resetGame);
