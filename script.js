@@ -74,20 +74,20 @@ function loseGame() {
 // The setTimer function starts and stops the timer and triggers winGame() and loseGame()
 function startTimer() {
   // create an interval that counts down a timerCount variable and updates the timerElement to show the time decrementing
-  var timeInterval = setInterval(function () {
+  timer = setInterval(function () {
     timerCount--;
     timerElement.textContent = timerCount;
     // create a conditional here that checks you have any time left and if so check to see if isWin condition is met and you still have time left
     if (timerCount >= 0) {
       if (isWin && timerCount > 0) {
         // if that condition is true then clear the interval and fire the winGame function
-        clearInterval(timeInterval);
+        clearInterval(timer);
         winGame();
       }
     }
     // However, if the timerCount is equal to 0 then clear the interval and fire the loseGame function
     if (timerCount === 0) {
-      clearInterval(timeInterval);
+      clearInterval(timer);
       loseGame();
     }
   }, 1000);
@@ -137,8 +137,9 @@ function getWins() {
     winCounter === savedWins;
   }
   // render the win count to the page
-  win.textContent = savedWins;
+  win.textContent = winCounter;
 }
+
 function getLosses() {
   // get the loseCount from localStorage
   var loseTotal = localStorage.getItem("loseCount");
@@ -150,14 +151,14 @@ function getLosses() {
     loseCounter === loseTotal;
   }
   // render the lose count to the page
-  lose.textContent = loseTotal;
+  lose.textContent = loseCounter;
 }
 
 function checkWin() {
   // If the word equals the blankLetters array when converted to string, set isWin to true
   if (chosenWord === blanksLetters.join("")) {
     // This value is used in the timer function to test if win condition is met
-    isWin === true;
+    isWin = true;
   }
 }
 
@@ -177,9 +178,9 @@ function checkLetters(letter) {
         blanksLetters[j] = letter;
       }
     }
+    // once updated update the wordBlank textContent with a string version of the blankLetters array
+    wordBlank.textContent = blanksLetters.join(" ");
   }
-  // once updated update the wordBlank textContent with a string version of the blankLetters array
-  wordBlank.textContent = blanksLetters.join("");
 }
 
 // Attach event listener to document to listen for key event
@@ -195,10 +196,10 @@ document.addEventListener("keydown", function (event) {
   // Test if key pushed is letter.
   if (alphaNumChar.includes(key)) {
     var guessedLetter = event.key;
+    // after we fire the checkLetters() function we fire the checkWin() function to see if we won or not.
+    checkLetters(guessedLetter);
+    checkWin();
   }
-  // after we fire the checkLetters() function we fire the checkWin() function to see if we won or not.
-  checkLetters(guessedLetter);
-  checkWin();
 });
 
 // TODO:Attach event listener to start button to call startGame function on click
